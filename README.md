@@ -1,2 +1,3 @@
 # PataNegra_Bot
-Pruebas Manu Pata Negra
+
+sudo pip install pyTelegramBotAPI
