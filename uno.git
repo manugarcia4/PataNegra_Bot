@@ -1,0 +1,54 @@
+
+
+var TelegramBot = require('node-telegram-bot-api');
+
+var token = 'x:x';
+// Setup polling way
+var bot = new TelegramBot(token, {polling: true});
+var chatall1 = false, chatall2 = false;
+bot.on('text', function (msg) {
+	if (/^\/send\s(.*)/.test(msg.text)) {
+		res = msg.text.match(/^\/send\s(.*)/);
+		if (res[1]){
+			if (msg.chat.id == -13794010) bot.sendMessage(-36246399, "Mensaje de "+msg.from.first_name+" (@"+msg.from.username+") por Shurprogramadores Senior: "+res[1]);
+			else if (msg.chat.id == -36246399) bot.sendMessage(-13794010, "Mensaje de "+msg.from.first_name+" (@"+msg.from.username+") por Shurprogramadores Junior: "+res[1]);
+		}
+	}
+	if (/^\/sendanon\s(.*)/.test(msg.text)) {
+		res = msg.text.match(/^\/sendanon\s(.*)/);
+		if (res[1]) {
+			if (msg.chat.id == -13794010) bot.sendMessage(-36246399, "Mensaje anonimo por Shurprogramadores Senior: "+res[1]);
+			else if (msg.chat.id == -36246399) bot.sendMessage(-13794010, "Mensaje anonimo por Shurprogramadores Junior: "+res[1]);
+		}
+	}
+	if (/^\/sendall\s(.*)/.test(msg.text)) {
+		res = msg.text.match(/^\/sendall\s(.*)/);
+		if (res[1] == "on") {
+			if (msg.chat.id == -13794010) {
+				chatall1 = true;
+				bot.sendMessage(-13794010, "Reenvio masivo activado!");
+				bot.sendMessage(-36246399, msg.from.first_name+" (@"+msg.from.username+") ha activado el reenvio masivo en el grupo Senior");
+			} else if (msg.chat.id == -36246399) {
+				chatall2 = true;
+				bot.sendMessage(-36246399, "Reenvio masivo activado!");
+				bot.sendMessage(-13794010, msg.from.first_name+" (@"+msg.from.username+") ha activado el reenvio masivo en el grupo Junior");
+			}
+		} else if (res[1] == "off") {
+			if (msg.chat.id == -13794010) {
+				chatall1 = false;
+				bot.sendMessage(-13794010, "Reenvio masivo desactivado!");
+				bot.sendMessage(-36246399, msg.from.first_name+" (@"+msg.from.username+") ha desactivado el reenvio masivo en el grupo Senior");
+			} else if (msg.chat.id == -36246399) {
+				chatall2 = false;
+				bot.sendMessage(-36246399, "Reenvio masivo desactivado!");
+				bot.sendMessage(-13794010, msg.from.first_name+" (@"+msg.from.username+") ha desactivado el reenvio masivo en el grupo Junior");
+			}
+		} else bot.sendMessage(msg.chat.id, "Sintaxis incorrecta");
+	}
+	if (chatall1 == true && msg.chat.id == -13794010) {
+		bot.forwardMessage(-36246399, msg.chat.id, msg.message_id);
+	}
+	if (chatall2 == true && msg.chat.id == -36246399) {
+		bot.forwardMessage(-13794010, msg.chat.id, msg.message_id);
+	}
+});
